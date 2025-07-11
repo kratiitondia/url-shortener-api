@@ -128,16 +128,6 @@ Returns metadata for the short URL:
 
 You can test the API endpoints using Postman.
 
-### 📁 Collection File
-
-📥 [Download Postman Collection (v2.1)](./url-shortener-api.postman_collection.json)
-
-> This file contains requests for:
-> - `POST /shorten` (with & without expiry)
-> - `GET /stats/:code`
-> - `GET /:code`
-> - Error examples (invalid URL, 404, 410)
-
 ### 🌐 Online Documentation
 
 📖 [View Postman Docs](https://kratiitondiya.postman.co/workspace/65484e0d-ca02-4f69-8aab-deea0fd05584/documentation/46664195-43755e6e-1146-4616-93df-a013ebd55a88)
