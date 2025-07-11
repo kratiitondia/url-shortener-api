@@ -127,7 +127,7 @@ Returns metadata for the short URL:
 ## 🧪 Testing (Postman)
 
 Import this file:
-[`url-shortener-api.postman_collection.json`](./url-shortener-api.postman_collection.json)
+[`url-shortener-api.postman_collection.json`][(./url-shortener-api.postman_collection.json)](https://kratiitondiya.postman.co/workspace/65484e0d-ca02-4f69-8aab-deea0fd05584/documentation/46664195-43755e6e-1146-4616-93df-a013ebd55a88)
 
 Use the environment variable `shortCode` for stat/redirect testing.
 
