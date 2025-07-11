@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>URL Shortener</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 2rem; max-width: 600px; margin: auto; }
+    input, button { padding: 10px; font-size: 1rem; margin-top: 0.5rem; width: 100%; }
+    .result { margin-top: 1rem; }
+    .section { margin-top: 2rem; border-top: 1px solid #ccc; padding-top: 1rem; }
+  </style>
+</head>
+<body>
+  <h2>🔗 URL Shortener</h2>
+
+  <label for="url">Enter Long URL:</label>
+  <input type="text" id="url" placeholder="https://example.com">
+
+  <label for="expiry">Expiry Days (optional):</label>
+  <input type="number" id="expiry" placeholder="e.g. 3">
+
+  <button onclick="shortenUrl()">Shorten URL</button>
+
+  <div class="result" id="result"></div>
+
+  <div class="section">
+    <h3>📊 URL Stats</h3>
+    <label for="code"> Short Code:</label>
+    <input type="text" id="code" placeholder="e.g. 5GpTf2Shf">
+    <button onclick="getStats()">Get Stats</button>
+    <div class="result" id="statsResult"></div>
+  </div>
+
+  <script>
+    async function shortenUrl() {
+      const url = document.getElementById('url').value;
+      const expiry = document.getElementById('expiry').value;
+
+      const response = await fetch('/shorten', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url, expiryDays: Number(expiry) || undefined })
+      });
+
+      const data = await response.json();
+      const resultDiv = document.getElementById('result');
+      const statsDiv = document.getElementById('statsResult');
+
+      if (data.shortUrl) {
+        resultDiv.innerHTML = `<p>✅ Short URL: <a href="${data.shortUrl}" target="_blank">${data.shortUrl}</a></p>`;
+
+        // Extract code and fetch stats
+        const code = data.shortUrl.split('/').pop();
+        document.getElementById('code').value = code;
+
+        const statsResponse = await fetch(`/stats/${code}`);
+        const stats = await statsResponse.json();
+
+        if (stats.error) {
+          statsDiv.innerHTML = `<p style="color:red;">❌ Error: ${stats.error}</p>`;
+        } else {
+          statsDiv.innerHTML = `
+            <p><strong>Original URL:</strong> <a href="${stats.originalUrl}" target="_blank">${stats.originalUrl}</a></p>
+            <p><strong>Short URL:</strong> ${stats.shortUrl}</p>
+            <p><strong>Clicks:</strong> ${stats.clicks}</p>
+            <p><strong>Created At:</strong> ${new Date(stats.createdAt).toLocaleString()}</p>
+            <p><strong>Expires:</strong> ${stats.expiryDate ? new Date(stats.expiryDate).toLocaleString() : 'Never'}</p>
+          `;
+        }
+
+      } else {
+        resultDiv.innerHTML = `<p style="color:red;">❌ Error: ${data.error || 'Something went wrong'}</p>`;
+      }
+    }
+
+    async function getStats() {
+      const code = document.getElementById('code').value.trim();
+      const statsDiv = document.getElementById('statsResult');
+
+      if (!code) {
+        statsDiv.innerHTML = '<p style="color:red;">❌ Please enter a short code</p>';
+        return;
+      }
+
+      const response = await fetch(`/stats/${code}`);
+      const data = await response.json();
+
+      if (data.error) {
+        statsDiv.innerHTML = `<p style="color:red;">❌ Error: ${data.error}</p>`;
+      } else {
+        statsDiv.innerHTML = `
+          <p><strong>Original URL:</strong> <a href="${data.originalUrl}" target="_blank">${data.originalUrl}</a></p>
+          <p><strong>Short URL:</strong> ${data.shortUrl}</p>
+          <p><strong>Clicks:</strong> ${data.clicks}</p>
+          <p><strong>Created At:</strong> ${new Date(data.createdAt).toLocaleString()}</p>
+          <p><strong>Expires:</strong> ${data.expiryDate ? new Date(data.expiryDate).toLocaleString() : 'Never'}</p>
+        `;
+      }
+    }
+  </script>
+</body>
+</html>
