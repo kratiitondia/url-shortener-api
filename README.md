@@ -35,8 +35,9 @@ A simple, efficient Node.js + Express API for shortening long URLs. Includes opt
 
 1. Clone the repo:
 ```bash
-git clone https://github.com/YOUR_USERNAME/url-shortener-api.git
+git clone https://github.com/kratiitondia/url-shortener-api.git
 cd url-shortener-api
+
 ```
 
 2. Install dependencies:
